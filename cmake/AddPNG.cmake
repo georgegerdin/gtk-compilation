@@ -1,0 +1,31 @@
+INCLUDE(ExternalProject)
+
+SET(ZLIB_ROOT ${CMAKE_CURRENT_BINARY_DIR})
+LIST(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_BINARY_DIR}")
+FIND_PACKAGE(PNG)
+
+#------------------------------------------------
+# LibPNG
+#------------------------------------------------
+IF( NOT PNG_FOUND OR REBUILD_EXTLIBS)
+	MESSAGE(STATUS "Updating external lib LibPNG")
+
+	SET(PNG_PREFIX 		"${CMAKE_CURRENT_BINARY_DIR}/png")
+	SET(PNG_INSTALL_DIR	"${CMAKE_CURRENT_BINARY_DIR}")
+	SET(PNG_CMAKE_ARGS	-DCMAKE_INSTALL_PREFIX=${PNG_INSTALL_DIR}
+						-DZLIB_ROOT=${ZLIB_ROOT})
+
+	IF(NOT TARGET zlib)
+		ADD_CUSTOM_TARGET(zlib)
+	ENDIF()
+	
+	ExternalProject_add(png
+		DEPENDS	zlib
+		PREFIX ${PNG_PREFIX}
+		GIT_REPOSITORY https://github.com/winlibs/libpng.git
+		INSTALL_DIR ${PNG_INSTALL_DIR}
+		CMAKE_ARGS ${PNG_CMAKE_ARGS}
+	)
+	
+	SET(BUILD_MAIN_PROJECT FALSE)
+ENDIF()
