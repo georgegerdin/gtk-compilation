@@ -1,16 +1,17 @@
 INCLUDE(ExternalProject)
 
-FIND_PACKAGE(jpeg-turbo)
+FIND_PACKAGE(turbojpeg)
 
 #------------------------------------------------
-# Jpeg-turbo
+# TurboJPEG
 #------------------------------------------------
-IF( NOT JPEGTURBO_FOUND OR REBUILD_EXTLIBS)
+IF( NOT TURBOJPEG_FOUND OR REBUILD_EXTLIBS)
 	MESSAGE(STATUS "Updating external lib libjpeg-turbo")
 
 	SET(JPEGTURBO_PREFIX 		"${CMAKE_CURRENT_BINARY_DIR}/jpegturbo")
-	SET(JPEGTURBO_INSTALL_DIR	"${CMAKE_CURRENT_BINARY_DIR}")
+	SET(JPEGTURBO_INSTALL_DIR	"${CMAKE_INSTALL_PREFIX}")
 	SET(JPEGTURBO_CMAKE_ARGS	-DCMAKE_INSTALL_PREFIX=${JPEGTURBO_INSTALL_DIR}
+								-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
 							    -DCMAKE_DEBUG_POSTFIX=d)
 	
 	ExternalProject_add(JPEGTURBO

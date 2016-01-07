@@ -1,23 +1,22 @@
-INCLUDE(ExternalProject)
+include(ExternalProject)
 
-SET(ZLIB_ROOT ${CMAKE_CURRENT_BINARY_DIR})
-LIST(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_BINARY_DIR}")
-FIND_PACKAGE(PNG)
+find_package(PNG)
 
 #------------------------------------------------
 # LibPNG
 #------------------------------------------------
-IF( NOT PNG_FOUND OR REBUILD_EXTLIBS)
-	MESSAGE(STATUS "Updating external lib LibPNG")
+if( NOT PNG_FOUND OR REBUILD_EXTLIBS)
+	message(STATUS "Updating external lib LibPNG")
 
-	SET(PNG_PREFIX 		"${CMAKE_CURRENT_BINARY_DIR}/png")
-	SET(PNG_INSTALL_DIR	"${CMAKE_CURRENT_BINARY_DIR}")
-	SET(PNG_CMAKE_ARGS	-DCMAKE_INSTALL_PREFIX=${PNG_INSTALL_DIR}
-						-DZLIB_ROOT=${ZLIB_ROOT})
+	set(PNG_PREFIX 		"${CMAKE_CURRENT_BINARY_DIR}/png")
+	set(PNG_INSTALL_DIR	"${CMAKE_INSTALL_PREFIX}")
+	set(PNG_CMAKE_ARGS	-DCMAKE_INSTALL_PREFIX=${PNG_INSTALL_DIR}
+						-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
+						-DCMAKE_DEBUG_POSTFIX=d)
 
-	IF(NOT TARGET zlib)
-		ADD_CUSTOM_TARGET(zlib)
-	ENDIF()
+	if(NOT TARGET zlib)
+		add_custom_target(zlib)
+	endif()
 	
 	ExternalProject_add(png
 		DEPENDS	zlib
@@ -27,5 +26,5 @@ IF( NOT PNG_FOUND OR REBUILD_EXTLIBS)
 		CMAKE_ARGS ${PNG_CMAKE_ARGS}
 	)
 	
-	SET(BUILD_MAIN_PROJECT FALSE)
-ENDIF()
+	set(BUILD_MAIN_PROJECT FALSE)
+endif()
